@@ -1,5 +1,5 @@
 import { contract, ABI } from "../../constants";
-import { useContractRead, useAccount } from "wagmi";
+import { useContractRead } from "wagmi";
 import { BigNumber } from "ethers";
 import Box from "~/components/Box";
 
