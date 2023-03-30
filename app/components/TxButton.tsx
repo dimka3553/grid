@@ -4,6 +4,7 @@ import {
   usePrepareContractWrite,
   useWaitForTransaction,
   useAccount,
+  useBalance,
 } from "wagmi";
 import { ABI, contract } from "../../constants";
 import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
@@ -16,11 +17,20 @@ type TxButtonProps = {
   color: string;
   message: string;
   price: BigNumber;
+  setOpen: (open: boolean) => void;
 };
 
-export default function TxButton({ id, color, message, price }: TxButtonProps) {
+export default function TxButton({
+  id,
+  color,
+  message,
+  price,
+  setOpen,
+}: TxButtonProps) {
   const addRecentTransaction = useAddRecentTransaction();
   const { isConnected } = useAccount();
+  const { data } = useBalance();
+  console.log(data);
   const { config } = usePrepareContractWrite({
     abi: ABI,
     address: contract,
@@ -39,11 +49,7 @@ export default function TxButton({ id, color, message, price }: TxButtonProps) {
     isSuccess: loading,
   } = useContractWrite(config);
 
-  const {
-    data: tx,
-    isLoading: txLoading,
-    isSuccess: txSuccess,
-  } = useWaitForTransaction({
+  const { isSuccess } = useWaitForTransaction({
     hash: txData?.hash,
     onSuccess: () => {
       reset();
@@ -58,30 +64,37 @@ export default function TxButton({ id, color, message, price }: TxButtonProps) {
 
   if (!isConnected) {
     return (
-      <ConnectButton.Custom>
-        {({ openConnectModal }) => {
-          return (
-            <button
-              onClick={openConnectModal}
-              className="bg-primary text-white text-lg font-bold rounded-md h-[44px] w-full flex items-center justify-center scale-sm disabled:opacity-50 disabled:scale-100"
-              type="button"
-            >
-              Connect Wallet
-            </button>
-          );
+      <div
+        onClick={() => {
+          setOpen(false);
         }}
-      </ConnectButton.Custom>
+      >
+        <ConnectButton.Custom>
+          {({ openConnectModal }) => {
+            return (
+              <button
+                onClick={openConnectModal}
+                className="bg-primary text-white text-lg font-bold rounded-md h-[44px] w-full flex items-center justify-center scale-sm disabled:opacity-50 disabled:scale-100"
+                type="button"
+              >
+                Connect Wallet
+              </button>
+            );
+          }}
+        </ConnectButton.Custom>
+      </div>
     );
   }
   return (
     <button
       className="bg-primary text-white text-lg font-bold rounded-md h-[44px] w-full flex items-center justify-center scale-sm disabled:opacity-50 disabled:scale-100"
       onClick={() => buyBox?.()}
-      disabled={started || loading}
+      disabled={started || loading || price.gt(data?.value || 0)}
     >
       {started && "Waiting for approval..."}
       {loading && "Buying..."}
-      {!started && !loading && "Buy Box"}
+      {price.gt(data?.value || 0) && "Insufficient funds"}
+      {!started && !loading && price.lt(data?.value || 0) && "Buy Box"}
     </button>
   );
 }

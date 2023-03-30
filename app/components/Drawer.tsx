@@ -139,6 +139,7 @@ export default function Drawer({
                 color={color}
                 message={message}
                 id={id}
+                setOpen={setOpen}
               />
             )}
           </div>
