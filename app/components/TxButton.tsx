@@ -28,9 +28,10 @@ export default function TxButton({
   setOpen,
 }: TxButtonProps) {
   const addRecentTransaction = useAddRecentTransaction();
-  const { isConnected } = useAccount();
-  const { data } = useBalance();
-  console.log(data);
+  const { isConnected, address } = useAccount();
+  const { data: balance } = useBalance({
+    address: address,
+  });
   const { config } = usePrepareContractWrite({
     abi: ABI,
     address: contract,
@@ -89,12 +90,12 @@ export default function TxButton({
     <button
       className="bg-primary text-white text-lg font-bold rounded-md h-[44px] w-full flex items-center justify-center scale-sm disabled:opacity-50 disabled:scale-100"
       onClick={() => buyBox?.()}
-      disabled={started || loading || price.gt(data?.value || 0)}
+      disabled={started || loading || price.gt(balance?.value || 0)}
     >
       {started && "Waiting for approval..."}
       {loading && "Buying..."}
-      {price.gt(data?.value || 0) && "Insufficient funds"}
-      {!started && !loading && price.lt(data?.value || 0) && "Buy Box"}
+      {price.gt(balance?.value || 0) && "Insufficient funds"}
+      {!started && !loading && price.lt(balance?.value || 0) && "Buy Box"}
     </button>
   );
 }

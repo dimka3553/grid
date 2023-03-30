@@ -47,7 +47,6 @@ export default function Drawer({
 
     setColor(col);
   };
-  console.log(`0x${color.substring(1)}`);
 
   const handleColorRelease = (e: React.ChangeEvent<HTMLInputElement>) => {
     //if the color is is less than 7 characters, add 0s to the end
