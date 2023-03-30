@@ -39,7 +39,7 @@ body {
   background-color: #00000088;
   position: fixed;
   inset: 0;
-  z-index: 1;
+  z-index: 2;
   animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
   transition: 0.2s;
 }
@@ -53,7 +53,7 @@ body {
   width: 100vw;
   max-width: 400px;
   animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 2;
+  z-index: 3;
   overflow: auto;
   padding-bottom: 20px;
 }

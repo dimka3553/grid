@@ -32,7 +32,7 @@ export default function Box({ box, index }: BoxProps) {
     backgroundColor: "#f4f6f9",
     borderRadius: "4px",
     padding: "8px",
-    zIndex: 1000,
+    zIndex: 1,
     pointerEvents: "none",
     maxWidth: "200px",
   };
